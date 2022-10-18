@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Car {
     private String brand;
     private String model;
@@ -7,12 +9,20 @@ public class Car {
     private String productionCountry;
 
     public Car(String brand, String model, double engineVolume, String color, int productionYear, String productionCountry) {
-        this.brand = brand;
-        this.model = model;
-        this.engineVolume = engineVolume;
-        this.color = color;
-        this.productionCountry = productionCountry;
-        this.productionYear = productionYear;
+        this.brand = Objects.requireNonNullElse(brand, "default");
+        this.model = Objects.requireNonNullElse(model, "default");
+        this.color = Objects.requireNonNullElse(color, "белый");
+        this.productionCountry = Objects.requireNonNullElse(productionCountry, "default");
+        if (engineVolume == 0) {
+            this.engineVolume = 1.5;
+        } else {
+            this.engineVolume = engineVolume;
+        }
+        if (productionYear == 0) {
+            this.productionYear = 2000;
+        } else {
+            this.productionYear = productionYear;
+        }
     }
 
     public String getBrand() {
