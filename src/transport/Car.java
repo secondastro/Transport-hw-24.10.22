@@ -3,19 +3,27 @@ package transport;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Car {
-    private final String brand;
-    private final String model;
+public class Car extends Transport {
+
     private double engineVolume;
-    private String color;
-    private final int productionYear;
-    private final String productionCountry;
+
     private String transmission;
     private final String bodyType;
     private String regNumber;
     private final int passCapacity;
     private String tiresType;
     private int month;
+
+    @Override
+    public void refill(String fuel) {
+        boolean b = (fuel.contains("бензин") || fuel.contains("дизел") || fuel.contains("электро"));
+        if (b==false) {
+            throw new RuntimeException("Ошибка, некорректно указан способ заправки");
+        } else {
+            setFuel(fuel);
+        }
+
+    }
 
     public static class Key {
         private final boolean remoteEngineStart;
@@ -75,20 +83,12 @@ public class Car {
 
 
 
-    public Car(String brand, String model, double engineVolume, String color, int productionYear, String productionCountry, String transmission, String bodyType, String regNumber, int passCapacity, int month, Key key, Insurance insurance) {
-        this.brand = Objects.requireNonNullElse(brand, "default");
-        this.model = Objects.requireNonNullElse(model, "default");
-        this.color = Objects.requireNonNullElse(color, "белый");
-        this.productionCountry = Objects.requireNonNullElse(productionCountry, "default");
+    public Car(String brand, String model, double engineVolume, String color, int productionYear, String productionCountry, String transmission, String bodyType, String regNumber, int passCapacity, int month, Key key, Insurance insurance, int maxSpeed) {
+        super(brand, model, productionYear, productionCountry, color, maxSpeed);
         if (engineVolume == 0) {
             this.engineVolume = 1.5;
         } else {
             this.engineVolume = engineVolume;
-        }
-        if (productionYear == 0) {
-            this.productionYear = 2000;
-        } else {
-            this.productionYear = productionYear;
         }
         this.transmission = Objects.requireNonNullElse(transmission, "механическая");
         this.bodyType = Objects.requireNonNullElse(bodyType, "седан");
@@ -132,15 +132,6 @@ public class Car {
     }
 
 
-    public String getBrand() {
-        return brand;
-    }
-
-
-    public String getModel() {
-        return model;
-    }
-
 
     public double getEngineVolume() {
         return engineVolume;
@@ -152,25 +143,6 @@ public class Car {
         }
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        if (color != null) {
-            this.color = color;
-        }
-    }
-
-    public int getProductionYear() {
-        return productionYear;
-    }
-
-
-    public String getProductionCountry() {
-        return productionCountry;
-    }
-
     public String getBodyType() {
         return bodyType;
     }
@@ -180,21 +152,21 @@ public class Car {
     }
 
 
+
     @Override
     public String toString() {
-        return "Автомобиль: " + '\n' +
-                "Марка: " + brand +
-                ", Модель: " + model +
-                ", Объем двигателя(в литрах): " + engineVolume +
-                ", цвет: " + color +
-                ", год производства: " + productionYear +
-                ", страна: " + productionCountry+
-                ", коробка передач: " + transmission+
-                ", тип кузова: " + bodyType +
-                ", регистрационный номер: "  + regNumber +
-                ", вместимость: " + passCapacity +
-                ", тип шин: " + tiresType;
-
+        return getBrand() + " " + getModel() + ":"  + '\n' +
+                "Цвет: " + getColor() +
+                ", Год производства: " + getProductionYear() +
+                ", Страна: " + getProductionCountry()+
+                ", Объём двигателя: " + engineVolume
+              + ", Максимальная скорость: " + getMaxSpeed() +
+                ", Коробка передач: " + transmission +
+                ", Тип кузова: " + bodyType +
+                ", Рег.номер: " + regNumber +
+                ", Вместимость: " + passCapacity +
+                ", Тип шин: " + tiresType +
+                ", Заправлять/заряжать: " + getFuel();
     }
-
 }
+
